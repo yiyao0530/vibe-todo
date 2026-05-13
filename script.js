@@ -1,110 +1,234 @@
-const themeBtn = document.getElementById('themeBtn');
-const todoInput = document.getElementById('todoInput');
-const addBtn = document.getElementById('addBtn');
-const todoList = document.getElementById('todoList');
-const filterBtns = document.querySelectorAll('.filter-btn');
-const clearAllBtn = document.getElementById('clearAll');
-const totalEl = document.getElementById('total');
-const doneEl = document.getElementById('done');
-
-let todos = JSON.parse(localStorage.getItem('vibeTodo')) || [];
-let isLight = localStorage.getItem('theme') === 'light';
-let currentFilter = 'all';
-
-// 初始化主题
-if (isLight) {
-  document.body.classList.add('light');
-  themeBtn.innerText = '切换暗黑模式';
+:root {
+  --bg: #121826;
+  --card-bg: #1e2538;
+  --text: #e5e7eb;
+  --gray: #9ca3af;
+  --primary: #6366f1;
+  --hover: #4f46e5;
+  --danger: #ef4444;
+  --lottery: #f59e0b;
 }
 
-// 更新统计数量
-function updateCount() {
-  const total = todos.length;
-  const done = todos.filter(item => item.done).length;
-  totalEl.innerText = total;
-  doneEl.innerText = done;
+.light {
+  --bg: #f3f4f6;
+  --card-bg: #ffffff;
+  --text: #1f2937;
+  --gray: #6b7280;
+  --primary: #6366f1;
+  --hover: #4f46e5;
+  --danger: #ef4444;
+  --lottery: #f59e0b;
 }
 
-// 渲染待办
-function renderTodos() {
-  todoList.innerHTML = '';
-
-  // 筛选逻辑
-  let showList = todos;
-  if (currentFilter === 'undone') {
-    showList = todos.filter(item => !item.done);
-  } else if (currentFilter === 'done') {
-    showList = todos.filter(item => item.done);
-  }
-
-  showList.forEach((item, index) => {
-    const realIndex = todos.indexOf(item);
-    const li = document.createElement('li');
-    li.className = `todo-item ${item.done ? 'done' : ''}`;
-    li.innerHTML = `
-      <input type="checkbox" ${item.done ? 'checked' : ''} data-index="${realIndex}">
-      <span class="todo-text">${item.content}</span>
-      <button class="del-btn" data-index="${realIndex}">删除</button>
-    `;
-    todoList.appendChild(li);
-  });
-
-  localStorage.setItem('vibeTodo', JSON.stringify(todos));
-  updateCount();
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
 }
 
-// 首次渲染
-renderTodos();
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 40px 20px;
+  transition: background 0.4s ease, color 0.4s ease;
+}
 
-// 添加待办
-addBtn.addEventListener('click', () => {
-  const val = todoInput.value.trim();
-  if (!val) return;
-  todos.push({ content: val, done: false });
-  todoInput.value = '';
-  renderTodos();
-});
+.container {
+  max-width: 500px;
+  margin: 0 auto;
+}
 
-// 回车添加
-todoInput.addEventListener('keydown', e => {
-  if (e.key === 'Enter') addBtn.click();
-});
+/* ========= 每日一签 ========= */
+.lottery-box {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 16px;
+  text-align: center;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
 
-// 勾选、删除
-todoList.addEventListener('click', e => {
-  const idx = Number(e.target.dataset.index);
-  if (e.target.tagName === 'INPUT') {
-    todos[idx].done = e.target.checked;
-    renderTodos();
-  }
-  if (e.target.classList.contains('del-btn')) {
-    todos.splice(idx, 1);
-    renderTodos();
-  }
-});
+.lottery-result {
+  font-size: 16px;
+  margin-bottom: 12px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--lottery);
+  font-weight: 500;
+  line-height: 1.5;
+}
 
-// 主题切换
-themeBtn.addEventListener('click', () => {
-  document.body.classList.toggle('light');
-  const nowLight = document.body.classList.contains('light');
-  localStorage.setItem('theme', nowLight ? 'light' : 'dark');
-  themeBtn.innerText = nowLight ? '切换暗黑模式' : '切换浅色模式';
-});
+.draw-btn {
+  padding: 10px 20px;
+  border-radius: 30px;
+  border: none;
+  background: var(--lottery);
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
 
-// 筛选按钮
-filterBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    filterBtns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentFilter = btn.dataset.filter;
-    renderTodos();
-  });
-});
+.draw-btn:disabled {
+  background: var(--gray);
+  cursor: not-allowed;
+}
 
-// 清空全部
-clearAllBtn.addEventListener('click', () => {
-  if (confirm('确定要清空所有待办吗？')) {
-    todos = [];
-    renderTodos();
-  }
-});
+.draw-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+/* ========= 主题按钮 ========= */
+#themeBtn {
+  margin-bottom: 20px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: none;
+  background: var(--primary);
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#themeBtn:hover {
+  background: var(--hover);
+  transform: translateY(-2px);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.count-info {
+  text-align: center;
+  color: var(--gray);
+  margin-bottom: 25px;
+}
+
+.input-box {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+#todoInput {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: none;
+  background: var(--card-bg);
+  color: var(--text);
+  font-size: 16px;
+  outline: none;
+  transition: 0.3s;
+}
+
+#todoInput:focus {
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
+#addBtn {
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: none;
+  background: var(--primary);
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#addBtn:hover {
+  background: var(--hover);
+}
+
+.filter-box {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filter-btn {
+  padding: 6px 14px;
+  border-radius: 16px;
+  border: none;
+  background: transparent;
+  color: var(--gray);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.filter-btn.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+ul {
+  list-style: none;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: var(--card-bg);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  transition: all 0.3s ease;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.todo-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.todo-item.done .todo-text {
+  text-decoration: line-through;
+  color: var(--gray);
+}
+
+.todo-text {
+  flex: 1;
+  margin: 0 12px;
+}
+
+.del-btn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: none;
+  background: var(--danger);
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#clearAll {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--danger);
+  background: transparent;
+  color: var(--danger);
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#clearAll:hover {
+  background: var(--danger);
+  color: #fff;
+}

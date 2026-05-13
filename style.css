@@ -6,6 +6,7 @@
   --primary: #6366f1;
   --hover: #4f46e5;
   --danger: #ef4444;
+  --lottery: #f59e0b;
 }
 
 .light {
@@ -15,6 +16,8 @@
   --gray: #6b7280;
   --primary: #6366f1;
   --hover: #4f46e5;
+  --danger: #ef4444;
+  --lottery: #f59e0b;
 }
 
 * {
@@ -37,6 +40,49 @@ body {
   margin: 0 auto;
 }
 
+/* ========= 每日一签 ========= */
+.lottery-box {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 16px;
+  text-align: center;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.lottery-result {
+  font-size: 16px;
+  margin-bottom: 12px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--lottery);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.draw-btn {
+  padding: 10px 20px;
+  border-radius: 30px;
+  border: none;
+  background: var(--lottery);
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.draw-btn:disabled {
+  background: var(--gray);
+  cursor: not-allowed;
+}
+
+.draw-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+/* ========= 主题按钮 ========= */
 #themeBtn {
   margin-bottom: 20px;
   padding: 8px 16px;
@@ -101,7 +147,6 @@ h1 {
   background: var(--hover);
 }
 
-/* 筛选栏 */
 .filter-box {
   display: flex;
   justify-content: center;

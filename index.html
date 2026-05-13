@@ -3,15 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Vibe ToDo 待办清单</title>
+  <title>Vibe ToDo 待办清单 ✨</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
+
+    <!-- 每日一签 区域 -->
+    <div class="lottery-box">
+      <div id="lotteryResult" class="lottery-result">
+        今日还未抽签 🍀
+      </div>
+      <button id="drawBtn" class="draw-btn">点击抽签</button>
+    </div>
+
     <button id="themeBtn">切换浅色模式</button>
 
     <h1>待办清单 ✨</h1>
-    <!-- 数量统计 -->
     <div class="count-info">
       总计：<span id="total">0</span> 条 
       已完成：<span id="done">0</span> 条
@@ -22,7 +30,6 @@
       <button id="addBtn">添加</button>
     </div>
 
-    <!-- 筛选按钮 -->
     <div class="filter-box">
       <button class="filter-btn active" data-filter="all">全部</button>
       <button class="filter-btn" data-filter="undone">未完成</button>
@@ -30,8 +37,6 @@
     </div>
 
     <ul id="todoList"></ul>
-
-    <!-- 清空全部 -->
     <button id="clearAll">清空所有待办</button>
   </div>
 
